@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Grant the existing mcpdebian SSH key access to 192.168.233.233.
-# Execute ON 192.168.233.233: sudo bash grant_mcpdebian_ssh_233.sh [target_username]
+# Execute ON 192.168.233.233: sudo bash grant_mcpdebian_ssh_233.sh [target_username] (defaults to masakacj)
 set -euo pipefail
 
 SOURCE_IP='192.168.233.137'
@@ -11,12 +11,12 @@ EXPECTED_HOST_FINGERPRINT='SHA256:/XHkeonv4RVSViGwHgcdiVpNXs8XGEJd1nEzTWTakwA'
 KEY_COMMENT='mcpdebian-192.168.233.137'
 
 if [[ $(id -u) -ne 0 ]]; then
-  echo '请使用 root 运行，例如：sudo bash grant_mcpdebian_ssh_233.sh youruser' >&2
+  echo '请使用 sudo 运行，例如：sudo bash grant_mcpdebian_ssh_233.sh masakacj' >&2
   exit 1
 fi
 
-# If the script is invoked through sudo, authorize the original login user by default.
-TARGET_USER="${1:-${SUDO_USER:-root}}"
+# Authorize the dedicated masakacj account unless another target username is provided.
+TARGET_USER="${1:-masakacj}"
 if ! id "$TARGET_USER" >/dev/null 2>&1; then
   echo "用户不存在：$TARGET_USER（请明确指定要授权的 Linux 用户）" >&2
   exit 1
